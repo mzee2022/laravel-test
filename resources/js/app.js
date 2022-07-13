@@ -3,29 +3,17 @@ import './bootstrap';
 
 import { createApp } from 'vue'
 
+import axios from 'axios';
+axios.defaults.baseURL = import.meta.env.VITE_APP_URL;
+axios.defaults.headers.common = {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+}
+
 
 import app from './components/App.vue'
+import swal from 'sweetalert2'
 
+import { router } from './route/router'
+import { store } from './store/store.js'
 
-const Login = () => import('@components/auth/login.vue')
-const Home = () => import('@components/layout/Home.vue')
-
-const routes = [
-    {
-        path: '/' , component: Home,
-    },
-    {
-        path: '/login' , component: Login,
-    }
-]
-
-import { createRouter , createWebHashHistory} from 'vue-router'
-
-const router = createRouter({
-    history: createWebHashHistory(),
-    mode: "history",
-    routes,
-})
-
-
-createApp(app).use(router).mount('#app');
+createApp(app).use(router, swal, store, axios).mount('#app');

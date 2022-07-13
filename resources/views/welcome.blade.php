@@ -19,7 +19,7 @@
                 font-family: 'Nunito', sans-serif;
             }
         </style>
-        <meta name="csrf-token" value="{{ csrf_token() }}" />
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         @vite('resources/css/app.css')
     </head>

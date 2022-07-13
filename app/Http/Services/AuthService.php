@@ -13,9 +13,14 @@ class AuthService
      * @param LoginRequest $loginRequest
      * @return array
      */
-    public function userLogin(array $loginRequest): array
+    public function userLogin(array $loginRequest)
     {
-        $uauthUser = Auth::attempt(['email' => $loginRequest['email'], 'password' => $loginRequest['password']]);
-        dd($uauthUser);
+        $authUser = Auth::attempt(['email' => $loginRequest['email'], 'password' => $loginRequest['password']]);
+        if($authUser){
+            $userData['token'] = auth()->user()->createToken('API Token')->plainTextToken;
+        }
+        $userData['status'] = $authUser;
+
+        return $userData;
     }
 }

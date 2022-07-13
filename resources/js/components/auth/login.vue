@@ -58,26 +58,51 @@
 
 <script>
     import axios from 'axios'
+    import Swal from 'sweetalert2'
+
     export default {
         name: "login",
 
         data() {
             return {
-                user:{}
+                user: {}
             }
         },
         methods: {
             loginUser() {
-                axios.post(import.meta.env.VITE_APP_URL + 'api/login', this.user)
-                    .then(response => (
-                        console.log(response,'success')
-                        // this.$router.push({ name: 'home' })
-                    ))
-                    .catch( function(error) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                    })
-                    .finally(() => this.loading = false)
+
+                try {
+                    axios.post('api/login', this.user)
+                        .then(function (response) {
+                            console.log(response.status)
+                            if (response.status && typeof response.data.data != 'undefined') {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'login Successfully!',
+                                    icon: 'success',
+                                });
+                                localStorage.setItem('token', response.data.data.accessToken)
+                            } else if (response.status) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.data.message,
+                                    icon: 'error',
+                                })
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Please enter correct email!',
+                                    icon: 'error',
+                                })
+                            }
+
+                        })
+                        .catch(function (error) {
+                        })
+                        .finally(() => this.loading = false)
+
+                } catch (error) {
+                }
             }
         }
     }
