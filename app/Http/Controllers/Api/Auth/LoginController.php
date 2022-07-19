@@ -10,6 +10,11 @@ use Illuminate\Support\Str;
 class LoginController extends Controller
 {
 
+    /**
+     * @param LoginRequest $request
+     * @param AuthService $authService
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(LoginRequest $request, AuthService $authService)
     {
         try{
@@ -26,6 +31,9 @@ class LoginController extends Controller
 
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function logout()
     {
         request()->user()->tokens()->where('id', Str::before(request()->bearerToken(), '|') )->delete();

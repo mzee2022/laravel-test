@@ -2,6 +2,7 @@ const Login = () => import('@components/auth/login.vue')
 const Home = () => import('@components/pages/Home.vue')
 const Layout = () => import('@components/layout/Layout.vue')
 const Dashboard = () => import('@components/pages/Dashboard.vue')
+const Profile = () => import('@components/pages/Profile.vue')
 
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
                 path: 'dashboard',
                 name: 'dashboard',
                 component: Dashboard,
+            },
+            {
+                path: 'profile',
+                name: 'profile',
+                component: Profile,
             },
         ]
     },

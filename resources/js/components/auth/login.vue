@@ -27,17 +27,17 @@
                                    placeholder="Password"/>
                         </div>
 
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="form-group form-check">
-                                <input type="checkbox"
-                                       class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"
-                                       id="exampleCheck3"
-                                       checked/>
-                                <label class="form-check-label inline-block text-gray-800" for="exampleCheck2"
-                                >Remember me</label
-                                >
-                            </div>
-                        </div>
+<!--                        <div class="flex justify-between items-center mb-6">-->
+<!--                            <div class="form-group form-check">-->
+<!--                                <input type="checkbox"-->
+<!--                                       class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"-->
+<!--                                       id="exampleCheck3"-->
+<!--                                       checked/>-->
+<!--                                <label class="form-check-label inline-block text-gray-800" for="exampleCheck2"-->
+<!--                                >Remember me</label-->
+<!--                                >-->
+<!--                            </div>-->
+<!--                        </div>-->
 
                         <!-- Submit button -->
                         <button
@@ -45,8 +45,7 @@
                                 @click="loginUser"
                                 class="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
                                 data-mdb-ripple="true"
-                                data-mdb-ripple-color="light"
-                        >
+                                data-mdb-ripple-color="light">
                             Sign in
                         </button>
                     </form>
@@ -70,15 +69,16 @@
             }
         },
         methods: {
-            loginUser() {
+            async loginUser() {
                 try {
-                    axios.post('api/login', this.user)
+                    await axios.post('api/login', this.user)
                         .then(function (response) {
                             if (response.status && typeof response.data.data != 'undefined') {
 
                                 router.go('dashboard')
                                 localStorage.setItem('token', response.data.data.accessToken)
                                 localStorage.setItem('user_name', response.data.data.name)
+                                localStorage.setItem('user_email', response.data.data.email)
                             } else if (response.status) {
                                 Swal.fire({
                                     title: 'Error!',
@@ -92,13 +92,25 @@
                                     icon: 'error',
                                 })
                             }
-
                         })
-                        .catch(function (error) {
+                        .catch(function (errors) {
+                            let displayError = '';
+                            errors.response.data.forEach(error => {
+                                displayError += error + '\n '
+                            })
+                            Swal.fire({
+                                title: 'Error!',
+                                html: "<li>" + displayError + "</li>",
+                                icon: 'error',
+                            })
                         })
-                        .finally(() => this.loading = false)
 
                 } catch (error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong!',
+                        icon: 'error',
+                    })
                 }
             }
         }

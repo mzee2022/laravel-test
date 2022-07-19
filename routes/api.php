@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->group( function(\Illuminate\Routing\Router $route) {
+Route::middleware('auth:sanctum')->group( function(Router $route) {
     $route->get('/logout',[ LoginController::class, 'logout' ]);
+    $route->post('/update_profile',[ UserController::class, 'update_profile' ]);
 });
 
