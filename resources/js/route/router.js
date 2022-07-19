@@ -1,8 +1,8 @@
 const Login = () => import('@components/auth/login.vue')
-const Home = () => import('@components/layout/Home.vue')
-const Dashboard = () => import('@components/layout/Home.vue')
+const Home = () => import('@components/pages/Home.vue')
+const Layout = () => import('@components/layout/Layout.vue')
+const Dashboard = () => import('@components/pages/Dashboard.vue')
 
-import auth from '@js/middleware/auth.js';
 
 const routes = [
     {
@@ -19,13 +19,21 @@ const routes = [
         },
     },
     {
-        path: '/dashboard',
-        name: 'dashboard',
-        component: Dashboard,
+        path: '/',
+        name: '',
+        component: Layout,
         meta: {
             middleware: 'auth',
         },
-    }
+        children: [
+            {
+                path: 'dashboard',
+                name: 'dashboard',
+                component: Dashboard,
+            },
+        ]
+    },
+
 ]
 
 import {createRouter, createWebHashHistory} from 'vue-router'
@@ -39,12 +47,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     if (to.meta.middleware == 'auth') {
         if (!localStorage.getItem('token')) {
-            return router.push({ name: 'login' });
+            return router.push({name: 'login'});
         }
-    } else if( to.meta.middleware == 'isLogged') {
+    } else if (to.meta.middleware == 'isLogged') {
         if (localStorage.getItem('token')) {
             next('/dashboard')
-            // return router.push({ name: 'dashboard' });
         }
     }
 

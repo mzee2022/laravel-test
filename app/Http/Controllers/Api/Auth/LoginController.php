@@ -5,8 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\LoginRequest;
 use App\Http\Services\AuthService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -16,20 +15,20 @@ class LoginController extends Controller
         try{
             $userData = $authService->userLogin($request->validated());
             if($userData['status']){
-                $authData = auth()->user()->only(['id','name']);
+                $authData = auth()->user()->only(['name','email']);
                 $authData['accessToken'] = $userData['token'];
                 return $this->sendJsonSuccessResponse('You are login', $authData);
             }
             return $this->sendJsonErrorResponse('Please enter correct password', $userData);
         } catch(\Exception $ex) {
-            dd($ex->getMessage());
+            return $this->sendJsonErrorResponse('Something went wrong');
         }
 
     }
 
     public function logout()
     {
-        request()->user()->currentAccessToken()->delete();
+        request()->user()->tokens()->where('id', Str::before(request()->bearerToken(), '|') )->delete();
         return $this->sendJsonSuccessResponse('Logout successfully!');
     }
 }

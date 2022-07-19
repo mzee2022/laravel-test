@@ -59,6 +59,7 @@
 <script>
     import axios from 'axios'
     import Swal from 'sweetalert2'
+    import { router } from '@js/route/router.js'
 
     export default {
         name: "login",
@@ -70,18 +71,14 @@
         },
         methods: {
             loginUser() {
-
                 try {
                     axios.post('api/login', this.user)
                         .then(function (response) {
-                            console.log(response.status)
                             if (response.status && typeof response.data.data != 'undefined') {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'login Successfully!',
-                                    icon: 'success',
-                                });
+
+                                router.go('dashboard')
                                 localStorage.setItem('token', response.data.data.accessToken)
+                                localStorage.setItem('user_name', response.data.data.name)
                             } else if (response.status) {
                                 Swal.fire({
                                     title: 'Error!',

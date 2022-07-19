@@ -7,6 +7,7 @@ export default defineConfig({
         alias: {
             '@': '/resources',
             '@js': '/resources/js',
+            '@css': '/resources/css',
             '@components': '/resources/js/components',
         },
     },
