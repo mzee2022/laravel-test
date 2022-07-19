@@ -10,6 +10,12 @@ class LoginRequest extends FormRequest
 {
 
     /**
+     * Indicates whether validation should stop after the first rule failure.
+     *
+     * @var bool
+     */
+    protected $stopOnFirstFailure = false;
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -27,7 +33,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required|min:6'
         ];
     }

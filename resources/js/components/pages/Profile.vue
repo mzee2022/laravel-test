@@ -48,7 +48,7 @@
                     let {name} = this.user;
                     await axios.post('api/update_profile', this.user)
                         .then(function (response) {
-                            router.push('dashboard')
+                            router.go('dashboard')
 
                             Swal.fire({
                                 title: 'Success!',
