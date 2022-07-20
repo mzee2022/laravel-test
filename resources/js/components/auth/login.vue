@@ -27,17 +27,17 @@
                                    placeholder="Password"/>
                         </div>
 
-<!--                        <div class="flex justify-between items-center mb-6">-->
-<!--                            <div class="form-group form-check">-->
-<!--                                <input type="checkbox"-->
-<!--                                       class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"-->
-<!--                                       id="exampleCheck3"-->
-<!--                                       checked/>-->
-<!--                                <label class="form-check-label inline-block text-gray-800" for="exampleCheck2"-->
-<!--                                >Remember me</label-->
-<!--                                >-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <!--                        <div class="flex justify-between items-center mb-6">-->
+                        <!--                            <div class="form-group form-check">-->
+                        <!--                                <input type="checkbox"-->
+                        <!--                                       class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer"-->
+                        <!--                                       id="exampleCheck3"-->
+                        <!--                                       checked/>-->
+                        <!--                                <label class="form-check-label inline-block text-gray-800" for="exampleCheck2"-->
+                        <!--                                >Remember me</label-->
+                        <!--                                >-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
 
                         <!-- Submit button -->
                         <button
@@ -56,9 +56,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import Swal from 'sweetalert2'
-    import { router } from '@js/route/router.js'
+    import { mapActions } from 'vuex'
 
     export default {
         name: "login",
@@ -69,49 +67,9 @@
             }
         },
         methods: {
-            async loginUser() {
-                try {
-                    await axios.post('api/login', this.user)
-                        .then(function (response) {
-                            if (response.status && typeof response.data.data != 'undefined') {
-
-                                router.go('dashboard')
-                                localStorage.setItem('token', response.data.data.accessToken)
-                                localStorage.setItem('user_name', response.data.data.name)
-                                localStorage.setItem('user_email', response.data.data.email)
-                            } else if (response.status) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: response.data.message,
-                                    icon: 'error',
-                                })
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Please enter correct email!',
-                                    icon: 'error',
-                                })
-                            }
-                        })
-                        .catch(function (errors) {
-                            let displayError = '';
-                            errors.response.data.forEach(error => {
-                                displayError += error + '\n '
-                            })
-                            Swal.fire({
-                                title: 'Error!',
-                                html: "<li>" + displayError + "</li>",
-                                icon: 'error',
-                            })
-                        })
-
-                } catch (error) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong!',
-                        icon: 'error',
-                    })
-                }
+            ...mapActions(['userLogin']),
+            loginUser() {
+                this.userLogin(this.user);
             }
         }
     }

@@ -18,13 +18,11 @@ class LoginController extends Controller
     public function login(LoginRequest $request, AuthService $authService)
     {
         try{
-            $userData = $authService->userLogin($request->validated());
-            if($userData['status']){
-                $authData = auth()->user()->only(['name','email']);
-                $authData['accessToken'] = $userData['token'];
-                return $this->sendJsonSuccessResponse('You are login', $authData);
+            $authUserData = $authService->userLogin($request->validated());
+            if ($authUserData['status']) {
+                return $this->sendJsonSuccessResponse('You are login', $authUserData);
             }
-            return $this->sendJsonErrorResponse('Please enter correct password', $userData);
+            return $this->sendJsonErrorResponse('Please enter correct password', $authUserData);
         } catch(\Exception $ex) {
             return $this->sendJsonErrorResponse('Something went wrong');
         }

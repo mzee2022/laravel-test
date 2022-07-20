@@ -16,8 +16,9 @@ class AuthService
     public function userLogin(array $loginRequest)
     {
         $authUser = Auth::attempt(['email' => $loginRequest['email'], 'password' => $loginRequest['password']]);
-        if($authUser){
-            $userData['token'] = auth()->user()->createToken('API Token')->plainTextToken;
+        if ($authUser) {
+            $userData = auth()->user()->only(['name','email']);
+            $userData['accessToken'] = auth()->user()->createToken('API Token')->plainTextToken;
         }
         $userData['status'] = $authUser;
 

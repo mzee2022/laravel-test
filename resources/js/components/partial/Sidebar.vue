@@ -14,14 +14,11 @@
             <!-- end sidebar toggle -->
 
             <!-- link -->
-            <router-link to="/dashboard" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500"> <i class="fad fa-chart-pie text-xs mr-2"></i> Dashboard</router-link>
+            <router-link to="/dashboard" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 text-xl"> <i class="fad fa-chart-pie text-xs mr-2"></i> Dashboard</router-link>
             <!-- end link -->
 
             <!-- link -->
-            <a href="#" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-                <i class="fad fa-shield-check text-xs mr-2"></i>
-                todo
-            </a>
+            <router-link to="/todo/listing" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500 text-xl"> <i class="fad fa-chart-pie text-xs mr-2"></i> Todo</router-link>
             <!-- end link -->
 
         </div>

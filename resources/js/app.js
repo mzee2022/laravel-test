@@ -10,10 +10,17 @@ axios.defaults.headers.common = {
 }
 
 
-import app from './components/App.vue'
-import swal from 'sweetalert2'
+import App from './components/App.vue'
+import Swal from 'sweetalert2'
 
 import { router } from './route/router'
-import { store } from './store/store.js'
+import store from './store/store'
+import Vuex from 'vuex'
 
-createApp(app).use(router, swal, store, axios).mount('#app');
+
+const app = createApp(App)
+app.use(store)
+app.use(router, Swal, axios, Vuex)
+app.mount('#app');
+
+// createApp(app).use(router, swal, store, axios).mount('#app');

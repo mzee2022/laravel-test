@@ -34,14 +34,14 @@
 
                         <div class="dropdown inline-block relative">
                             <button class="bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded inline-flex items-center">
-                                <span class="mr-1" v-html="user_name"></span>
+                                <span class="mr-1" v-html="getUserName"></span>
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/> </svg>
                             </button>
                             <ul class="dropdown-menu absolute hidden text-gray-700 pt-1">
                                 <li class="">
-                                    <router-link to="/profile" class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap">Profile</router-link>
+                                    <router-link to="/profile" class="rounded-t bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap hover:text-white">Profile</router-link>
                                 </li>
-                                <li class=""><button class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap" @click="userLogout">Logout</button></li>
+                                <li class=""><button class="bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap text-red-600" @click="userLogout">Logout</button></li>
                             </ul>
                         </div>
 
@@ -57,58 +57,24 @@
 </template>
 
 <script>
-    import { router } from '@js/route/router.js'
-    import axios from 'axios'
+    import { mapGetters , mapActions } from 'vuex'
 
     export default {
         name: "Header",
         data: () => {
-            return{
-                user_name : localStorage.getItem('user_name')
+            return {
             }
         },
-
+        computed: {
+            ...mapGetters(['getUserName']),
+        },
         methods: {
+            ...mapActions(['logout']),
             userLogout() {
-                let config = {
-                    headers: {
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    }
-                }
-                try {
-                    axios.get('api/logout', config)
-                        .then(function (response) {
-                            if (response.status && typeof response.data.data != 'undefined') {
-
-                                router.go('login')
-
-                                localStorage.removeItem('token')
-                                localStorage.removeItem('user_name')
-                                localStorage.removeItem('user_email')
-
-                            } else if (response.status) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: response.data.message,
-                                    icon: 'error',
-                                })
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Please enter correct email!',
-                                    icon: 'error',
-                                })
-                            }
-
-                        })
-                        .catch(function (error) {
-                        })
-                        .finally(() => this.loading = false)
-
-                } catch (error) {
-                }
+                this.logout()
             }
         }
+
     }
 </script>
 

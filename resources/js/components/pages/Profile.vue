@@ -16,10 +16,7 @@
                        id="password" type="email" disabled v-model="user.email">
             </div>
             <div class="flex items-center justify-between">
-                <button
-                        @click="updateProfile"
-                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="button">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                     Update
                 </button>
             </div>
@@ -28,9 +25,7 @@
 </template>
 
 <script>
-    import axios from 'axios'
-    import Swal from 'sweetalert2'
-    import { router } from '@js/route/router.js'
+    import { mapActions } from 'vuex'
 
     export default {
         name: "Profile",
@@ -43,36 +38,9 @@
             }
         },
         methods: {
-            async updateProfile() {
-                try {
-                    let {name} = this.user;
-                    await axios.post('api/update_profile', this.user)
-                        .then(function (response) {
-                            router.go('dashboard')
-
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Profile updated successfully',
-                                icon: 'success',
-                            })
-                            localStorage.setItem('user_name', name)
-
-                        })
-                        .catch(function (errors) {
-                            Swal.fire({
-                                title: 'Error!',
-                                text: errors.response.data.name[0],
-                                icon: 'error',
-                            })
-                        })
-
-                } catch (errors) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Something went wrong',
-                        icon: 'error',
-                    })
-                }
+            ...mapActions(['profileUpdate']),
+            updateProfile() {
+                this.profileUpdate(this.user)
             }
 
         }
