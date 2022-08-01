@@ -13,88 +13,81 @@ class AllTodoTest extends TestCase
     use WithFaker;
 
     /**
-     * A basic feature test example.
-     *
+     * @return array
+     */
+    public function getHeaders() {
+        $authService = App::make(AuthService::class);
+
+        return ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $authService->getLoggedInToken()];
+    }
+
+    /**
      * @return void
      */
     public function test_listing_todo()
     {
-        $authService = App::make(AuthService::class);
-        $this->json('GET', 'api/todo', ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $authService->getLoggedInToken()])
+        $this->json('GET', 'api/todo', $this->getHeaders())
             ->assertStatus(200)
             ->assertJsonStructure();
     }
 
     /**
-     * A basic feature test example.
-     *
      * @return void
      */
     public function test_add_todo()
     {
-        $authService = App::make(AuthService::class);
-        $todoData = [
-            'name' => $this->faker->name,
-            'description' => $this->faker->text,
-            'status' => $this->faker->boolean,
-        ];
-
-        $this->json('POST', 'api/todo', $todoData, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $authService->getLoggedInToken()])
+        $this->json('POST', 'api/todo', $this->getTodoData(), $this->getHeaders())
             ->assertStatus(200)
             ->assertJsonStructure();
 
     }
 
     /**
-     *
+     * @return void
      */
     public function test_display_todo()
     {
-        $authService = App::make(AuthService::class);
-        $todo = Todo::first();
-
-        $this->json('GET', 'api/todo/' . $todo->id,
-            [
-                'Accept' => 'application/json',
-                'Authorization' => 'Bearer ' . $authService->getLoggedInToken()
-            ]
-        )->assertStatus(200)
+        $this->json('GET', 'api/todo/' . $this->getLatestTodoId(), $this->getHeaders())
+            ->assertStatus(200)
             ->assertJsonStructure(['status']);
     }
 
     /**
-     * A basic feature test example.
-     *
      * @return void
      */
     public function test_update_todo()
     {
-        $authService = App::make(AuthService::class);
-        $todo = Todo::first();
 
-        $todoData = [
-            'name' => $this->faker->name,
-            'description' => $this->faker->text,
-            'status' => $this->faker->boolean,
-        ];
-
-        $this->json('PUT', 'api/todo/' . $todo->id, $todoData, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $authService->getLoggedInToken()])
+        $this->json('PUT', 'api/todo/' . $this->getLatestTodoId(), $this->getTodoData(), $this->getHeaders())
             ->assertStatus(200)
             ->assertJsonStructure();
     }
 
     /**
-     * A basic feature test example.
-     *
      * @return void
      */
     public function test_delete_todo()
     {
-        $authService = App::make(AuthService::class);
-        $todo = Todo::first();
-
-        $this->json('DELETE', 'api/todo/' . $todo->id, ['Accept' => 'application/json', 'Authorization' => 'Bearer ' . $authService->getLoggedInToken()])
+        $this->json('DELETE', 'api/todo/' . $this->getLatestTodoId(), $this->getHeaders())
             ->assertStatus(200)
             ->assertJsonStructure();
+    }
+
+    /**
+     * @return array
+     */
+    public function getTodoData() {
+        return [
+            'name' => $this->faker->name,
+            'description' => $this->faker->text,
+            'status' => $this->faker->boolean,
+        ];
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLatestTodoId() {
+        return Todo::latest()->first()->id;
     }
 }
