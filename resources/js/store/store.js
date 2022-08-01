@@ -34,14 +34,14 @@ export default createStore({
                 } else {
                     Swal.fire({
                         title: 'Error!',
-                        text: 'Please enter correct email!',
+                        text: 'Please enter password!',
                         icon: 'error',
                     })
                 }
 
             } catch (error) {
                 let displayError = '';
-                error.data.forEach(error => {
+                error.response.data.forEach(error => {
                     displayError += error + '\n '
                 })
                 Swal.fire({
