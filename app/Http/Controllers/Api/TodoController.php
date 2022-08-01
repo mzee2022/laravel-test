@@ -12,7 +12,7 @@ class TodoController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return TodoResource
      */
     public function index(TodoService $todoService)
     {
@@ -23,7 +23,7 @@ class TodoController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(SaveRequest $request, TodoService $todoService)
     {
@@ -41,7 +41,7 @@ class TodoController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id, TodoService $todoService)
     {
@@ -63,12 +63,12 @@ class TodoController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(SaveRequest $request, $id, TodoService $todoService)
     {
         try{
-            $request->request->add(['id' => $id]);
+            $request->merge(['id' => $id]);
             $todoId = $todoService->saveTodo($request->toArray());
 
             return $this->sendJsonSuccessResponse('Todo updated successfully!', $todoId->toArray());
@@ -81,7 +81,7 @@ class TodoController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(int $todo, TodoService $todoService)
     {
